@@ -1,0 +1,66 @@
+version: '3.5'
+
+services:
+    web:
+        build:
+            dockerfile: "httpd.dockerfile"
+            context: "./httpd"
+        restart: unless-stopped
+        networks:
+            - frontend
+            - backend
+        ports:
+            - "80:80"
+            - "127.0.0.1:8080:8080"
+        depends_on:
+            - db
+            - php
+            - adminer
+        volumes:
+            - type: bind
+              source: /home/anders/www
+              target: /var/www
+        env_file:
+            - ./spec.env
+    php:
+        build:
+            dockerfile: "php.dockerfile"
+            context: "./php"
+        networks:
+            - backend
+        volumes:
+            - type: bind
+              source: /home/anders/www
+              target: /var/www
+        env_file:
+            - ./spec.env
+    db:
+        image: mariadb
+        command: --default-authentication-plugin=mysql_native_password
+        restart: unless-stopped
+        cap_add:
+            - SYS_NICE
+        volumes:
+            - type: volume 
+              source: db-data
+              target: /var/lib/mysql
+              volume:
+                  nocopy: true
+        networks:
+            - backend
+        env_file:
+            - ./spec.env
+    adminer:
+        image: adminer:4.8.0-fastcgi
+        restart: unless-stopped
+        networks:
+            - backend
+        depends_on:
+            - db
+
+volumes:
+    db-data:
+
+networks:
+    backend:
+    frontend:
