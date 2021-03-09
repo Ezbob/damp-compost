@@ -3,7 +3,6 @@ version: '3.5'
 services:
     web:
         build:
-            dockerfile: "httpd.dockerfile"
             context: "./httpd"
         restart: unless-stopped
         networks:
@@ -14,17 +13,14 @@ services:
             - "127.0.0.1:8080:8080"
         depends_on:
             - db
-            - php
+            - php-fpm
             - adminer
         volumes:
             - type: bind
               source: /home/anders/www
               target: /var/www
-        env_file:
-            - ./spec.env
-    php:
+    php-fpm:
         build:
-            dockerfile: "php.dockerfile"
             context: "./php"
         networks:
             - backend
@@ -32,11 +28,11 @@ services:
             - type: bind
               source: /home/anders/www
               target: /var/www
-        env_file:
-            - ./spec.env
+        env_file: 
+            - ".env"
     db:
-        image: mariadb
-        command: --default-authentication-plugin=mysql_native_password
+        build:
+            context: "./mariadb"
         restart: unless-stopped
         cap_add:
             - SYS_NICE
@@ -48,8 +44,10 @@ services:
                   nocopy: true
         networks:
             - backend
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
         env_file:
-            - ./spec.env
+            - ".env"
     adminer:
         image: adminer:4.8.0-fastcgi
         restart: unless-stopped
