@@ -1,9 +1,8 @@
-version: '3.5'
+version: '3.6'
 
 services:
     web:
-        build:
-            context: "./httpd"
+        image: httpd:2.4.46
         restart: unless-stopped
         networks:
             - frontend
@@ -19,15 +18,19 @@ services:
             - type: bind
               source: /home/anders/www
               target: /var/www
+            - "./httpd.conf:/usr/local/apache2/conf/httpd.conf:ro"
+
     php-fpm:
-        build:
-            context: "./php"
+        build: "./php-fpm/"
         networks:
             - backend
         volumes:
             - type: bind
               source: /home/anders/www
               target: /var/www
+            - type: bind
+              source: ./php-fpm/www.conf
+              target: /usr/local/etc/php-fpm.d/www.conf
         env_file: 
             - ".env"
     db:
