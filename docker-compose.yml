@@ -16,8 +16,10 @@ services:
             - adminer
         volumes:
             - type: bind
-              source: /home/anders/www
+              source: ./www
               target: /var/www
+              volume: 
+                nocopy: true
             - "./httpd.conf:/usr/local/apache2/conf/httpd.conf:ro"
 
     php-fpm:
@@ -26,7 +28,7 @@ services:
             - backend
         volumes:
             - type: bind
-              source: /home/anders/www
+              source: ./www
               target: /var/www
             - type: bind
               source: ./php-fpm/www.conf
