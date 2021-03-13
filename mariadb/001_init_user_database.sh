@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -u -e
+
+echo "--- Setting up users and database ---"
+
+echo "\
+CREATE USER '${DATABASE_USER}' IDENTIFIED BY '${DATABASE_PASSWORD}';
+
+GRANT SELECT, DELETE, INSERT, UPDATE ON ${DATABASE_DATABASENAME}.* TO '${DATABASE_USER}';
+
+FLUSH PRIVILEGES;
+
+CREATE DATABASE ${DATABASE_DATABASENAME};
+" | mysql -uroot -p"${DATABASE_ROOT_PASSWORD}"
+
