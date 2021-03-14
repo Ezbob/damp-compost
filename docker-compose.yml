@@ -20,7 +20,8 @@ services:
               target: /var/www
               volume: 
                 nocopy: true
-            - "./httpd.conf:/usr/local/apache2/conf/httpd.conf:ro"
+            - "./httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro"
+            - "./httpd/mods.conf:/usr/local/apache2/conf/mods.conf:ro"
 
     php-fpm:
         build: "./php-fpm/"
