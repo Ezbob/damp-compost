@@ -1,15 +1,18 @@
-
+# Extension Docker-Compose for prometheus monitoring
 version: '3.6'
 
 services:
     prometheus:
         image: prom/prometheus:v2.25.0
+        restart: unless-stopped
         ports: 
             - '127.0.0.1:9000:9090'
         volumes:
             - ./prometheus:/etc/prometheus
             - prometheus-data:/prometheus
         command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
+        networks:
+            - frontend
 
 volumes:
     prometheus-data:
