@@ -21,7 +21,7 @@ services:
               volume: 
                 nocopy: true
             - "./httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro"
-            - "./httpd/mods.conf:/usr/local/apache2/conf/mods.conf:ro"
+            - "./httpd/modules.conf:/usr/local/apache2/conf/modules.conf:ro"
         logging:
             driver: "json-file"
             options:

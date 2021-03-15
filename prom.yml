@@ -12,7 +12,13 @@ services:
             - prometheus-data:/prometheus
         command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
         networks:
-            - frontend
+            - backend
+    httpd_export:
+        image: motork/apache_exporter:latest
+        restart: unless-stopped
+        command: --scrape_uri="http://web/server-status/?auto" 
+        networks:
+            - backend
 
 volumes:
     prometheus-data:
