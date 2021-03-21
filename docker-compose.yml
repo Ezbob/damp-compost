@@ -17,7 +17,7 @@ services:
         volumes:
             - type: bind
               source: ./www
-              target: /var/www
+              target: /var/www/html
               volume: 
                 nocopy: true
             - "./httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro"
@@ -33,12 +33,8 @@ services:
         networks:
             - backend
         volumes:
-            - type: bind
-              source: ./www
-              target: /var/www
-            - type: bind
-              source: ./php-fpm/www.conf
-              target: /usr/local/etc/php-fpm.d/www.conf
+            - "./www:/var/www/html:ro"
+            - "./php-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf:ro"
         env_file: 
             - ".env"
         logging:

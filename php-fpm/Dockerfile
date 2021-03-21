@@ -1,3 +1,4 @@
-FROM php:7.4.16-fpm-buster
+FROM php:8.0.3-fpm-buster
 
+RUN mkdir -p /var/www/html
 RUN docker-php-ext-install pdo pdo_mysql
